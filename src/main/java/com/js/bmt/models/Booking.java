@@ -1,8 +1,6 @@
 package com.js.bmt.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,9 +13,12 @@ import java.util.List;
 public class Booking extends BaseModel{
     @ManyToOne
     private Customer customer;
-//    private List<MovieShowSeat> movieShowSeats;
-//    private MovieShow movieShow;
+    @OneToMany
+    private List<MovieShowSeat> showSeats;
+    @OneToOne
+    private MovieShow movieShow;
     private Date bookedAt;
+    private Date createdAt;
     @Column(nullable = true)
     private double amount;
 }
