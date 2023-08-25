@@ -17,8 +17,7 @@ public class Booking extends BaseModel{
     private List<MovieShowSeat> showSeats;
     @OneToOne
     private MovieShow movieShow;
-    private Date bookedAt;
-    private Date createdAt;
+
     @Column(nullable = true)
     private double amount;
 }

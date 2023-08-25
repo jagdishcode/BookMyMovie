@@ -2,12 +2,15 @@ package com.js.bmt.services;
 
 
 import com.js.bmt.models.*;
+import com.js.bmt.repositories.BookingRepository;
 import com.js.bmt.repositories.CustomerRepository;
 import com.js.bmt.repositories.MovieShowRepository;
 import com.js.bmt.repositories.MovieShowSeatRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.plaf.OptionPaneUI;
 import java.util.Date;
@@ -35,7 +38,9 @@ public class BookingService {
     private CustomerRepository customerRepository;
     private MovieShowRepository movieShowRepository;
     private MovieShowSeatRepository movieShowSeatRepository;
+    private BookingRepository bookingRepository;
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public Booking createBooking(Long customerId, Long movieShowId, List<Long> seatIds){
         Optional<Customer> customerOptional = customerRepository.findById(customerId);
         if(customerOptional.isEmpty()){
@@ -48,6 +53,10 @@ public class BookingService {
 
         List<MovieShowSeat> movieShowSeats =
                 movieShowSeatRepository.findAllById(seatIds);
+
+        if(movieShowSeats.size() != seatIds.size()){
+            throw new IllegalArgumentException("All sear IDs not found");
+        }
         for(MovieShowSeat movieShowSeat : movieShowSeats){
             if(movieShowSeat.getStatus() != BookingSeatStatus.AVAILABLE){
                 throw new IllegalArgumentException("Something went wrong");
@@ -61,10 +70,12 @@ public class BookingService {
 
         Booking booking = new Booking();
         booking.setAmount(0);
-        booking.setCreatedAt(new Date());
+        //booking.setCreatedAt(new Date());
         booking.setShowSeats(movieShowSeats);
         booking.setCustomer(customerOptional.get());
         booking.setMovieShow(movieShow);
+
+        bookingRepository.save(booking);
         return booking;
     }
 }

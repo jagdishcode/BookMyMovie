@@ -4,7 +4,9 @@ import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter@Setter@Entity
+@Getter
+@Setter
+@Entity
 public class Seat extends BaseModel{
     private int rowNum;
     private int colNum;

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class CustomerService {
     private CustomerRepository customerRepository;
-    public Customer signUp(String name, String email){
+    public Customer signUp(String name, String email, String password){
         System.out.println("Service layer called for creating customer");
 
 
